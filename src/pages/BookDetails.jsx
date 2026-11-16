@@ -1,6 +1,6 @@
 import "../styles/Details.css";
 
-import { ArrowLeft, ChevronDown } from "lucide-react";
+import { ArrowLeft, ChevronDown, Link as LinkIcon} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 
@@ -12,6 +12,7 @@ export default function BookDetails() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [pagesInput, setPagesInput] = useState("");
+  const [nfcUrl, setNfcUrl] = useState(null);
   const readingStatus = ["reading", "finished"].includes(book?.status)
     ? book.status
     : "unread";
@@ -31,6 +32,8 @@ export default function BookDetails() {
         if (!cancelled) {
           setBook(data);
           setPagesInput(String(data.pages_read))
+          console.log(data);
+          setNfcUrl(data.nfc_url || null);
         }
       } catch (err) {
         if (!cancelled) setError(err.message);
@@ -102,6 +105,13 @@ export default function BookDetails() {
 
               <div className="book-metadata">
                 <h1>{book.title}</h1>
+                <button
+                type="button"
+                className=""
+                onClick={() => {console.log("NFC URL:", nfcUrl)}}
+                >
+                <LinkIcon size={19} strokeWidth={1.8} />
+                </button>
                 <h2>{book.authors.join(", ")}</h2>
                 <p>{book.first_publish_year ?? "Unknown"} · {book.num_pages ?? "Unknown"} pages</p>
               </div>
