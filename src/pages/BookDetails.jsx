@@ -4,6 +4,7 @@ import { ArrowLeft, ChevronDown, Link as LinkIcon} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 
+import NfcLinkModal from "../components/NfcLinkModal";
 import { apiFetch } from "../lib/api";
 
 export default function BookDetails() {
@@ -13,6 +14,7 @@ export default function BookDetails() {
   const [loading, setLoading] = useState(false);
   const [pagesInput, setPagesInput] = useState("");
   const [nfcUrl, setNfcUrl] = useState(null);
+  const [showNfcModal, setShowNfcModal] = useState(false);
   const readingStatus = ["reading", "finished"].includes(book?.status)
     ? book.status
     : "unread";
@@ -82,87 +84,96 @@ export default function BookDetails() {
       setError(err.message);
     }
   }
-    return (
-      <div className="book-details-page">
-        <Link to="/library" className="back-link">
-          <ArrowLeft size={17} />
-          Back to library
-        </Link>
+  
+  return (
+    <div className="book-details-page">
+      {showNfcModal && (
+        <NfcLinkModal
+          nfcLink={nfcUrl}
+          onClose={() => setShowNfcModal(false)}
+        />
+      )}
+      <Link to="/library" className="back-link">
+        <ArrowLeft size={17} />
+        Back to library
+      </Link>
 
-        {loading ? (
-          <p className="loading">Loading...</p>
-        ) : error ? (
-          <p className="error">{error}</p>
-        ) : book ? (
-          <div className="book-detail-content">
-            <img
-              className="detail-cover"
-              src={book.cover_url}
-              alt={`Cover of ${book.title}`}
-            />
+      {loading ? (
+        <p className="loading">Loading...</p>
+      ) : error ? (
+        <p className="error">{error}</p>
+      ) : book ? (
+        <div className="book-detail-content">
+          <img
+            className="detail-cover"
+            src={book.cover_url}
+            alt={`Cover of ${book.title}`}
+          />
 
-            <div className="detail-info">
+          <div className="detail-info">
 
-              <div className="book-metadata">
+            <div className="book-metadata">
+              <div className="book-title-row">
                 <h1>{book.title}</h1>
                 <button
                 type="button"
-                className=""
-                onClick={() => {console.log("NFC URL:", nfcUrl)}}
+                className="nfc-button"
+                onClick={() => {setShowNfcModal(true)}}
                 >
                 <LinkIcon size={19} strokeWidth={1.8} />
                 </button>
-                <h2>{book.authors.join(", ")}</h2>
-                <p>{book.first_publish_year ?? "Unknown"} · {book.num_pages ?? "Unknown"} pages</p>
+              </div>
+              <h2>{book.authors.join(", ")}</h2>
+              <p>{book.first_publish_year ?? "Unknown"} · {book.num_pages ?? "Unknown"} pages</p>
+            </div>
+
+            <div className="reading-section">
+              <label htmlFor="reading-status">Reading status</label>
+              <div className="status-select">
+                <select
+                  id="reading-status"
+                  value={readingStatus}
+                  onChange={(e) => handleStatusChange(e.target.value)}
+                >
+                  <option value="unread">Unread</option>
+                  <option value="reading">Reading</option>
+                  <option value="finished">Finished</option>
+                </select>
+                <ChevronDown size={16} />
               </div>
 
-              <div className="reading-section">
-                <label htmlFor="reading-status">Reading status</label>
-                <div className="status-select">
-                  <select
-                    id="reading-status"
-                    value={readingStatus}
-                    onChange={(e) => handleStatusChange(e.target.value)}
-                  >
-                    <option value="unread">Unread</option>
-                    <option value="reading">Reading</option>
-                    <option value="finished">Finished</option>
-                  </select>
-                  <ChevronDown size={16} />
-                </div>
-
-                {(readingStatus == "finished" || readingStatus == "reading" )&& (
-                  <div className={`reading-progress ${readingStatus}`}>
-                    <div className="progress-header">
-                      <span>Reading progress</span>
-                      <span className="progress-count">
-                      <input
-                        className="pages-read-input"
-                        type="number"
-                        min="0"
-                        max={book.num_pages ?? 0}
-                        value={pagesInput}
-                        onChange={(e) => setPagesInput(e.target.value)}
-                        onBlur={() => handleReadProgressChange(Number(pagesInput))}
-                      />
-                      / {book.num_pages}
-                      </span>
-                    </div>
-
-                    {book.num_pages > 0 && (
-                      <progress
-                        value={Math.min(book.pages_read, book.num_pages)}
-                        max={book.num_pages}
-                      />
-                    )}
+              {(readingStatus == "finished" || readingStatus == "reading" )&& (
+                <div className={`reading-progress ${readingStatus}`}>
+                  <div className="progress-header">
+                    <span>Reading progress</span>
+                    <span className="progress-count">
+                    <input
+                      className="pages-read-input"
+                      type="number"
+                      min="0"
+                      max={book.num_pages ?? 0}
+                      value={pagesInput}
+                      onChange={(e) => setPagesInput(e.target.value)}
+                      onBlur={() => handleReadProgressChange(Number(pagesInput))}
+                    />
+                    / {book.num_pages}
+                    </span>
                   </div>
-                )}
-              </div>
+
+                  {book.num_pages > 0 && (
+                    <progress
+                      value={Math.min(book.pages_read, book.num_pages)}
+                      max={book.num_pages}
+                    />
+                  )}
+                </div>
+              )}
             </div>
           </div>
-        ) : (
-          <p>Book not found.</p>
-        )}
-      </div>
-    );
+        </div>
+      ) : (
+        <p>Book not found.</p>
+      )}
+    </div>
+  );
 }

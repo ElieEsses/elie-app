@@ -4,11 +4,14 @@ import { useEffect, useState } from "react";
 
 import AddBookModal from "../components/AddBookModal";
 import BookCard from "../components/BookCard";
+import NfcLinkModal from "../components/NfcLinkModal";
 import { apiFetch } from "../lib/api";
 
 export default function Library() {
   const [books, setBooks] = useState([]);
   const [showAddBook, setShowAddBook] = useState(false);
+  const [showNfcModal, setShowNfcModal] = useState(false);
+  const [nfcUrl, setNfcUrl] = useState(null);
 
   function closeAddBook() {
     setShowAddBook(false);
@@ -21,6 +24,8 @@ export default function Library() {
         : [...prev, book]
     );
     setShowAddBook(false);
+    setNfcUrl(book.nfc_url || null);
+    setShowNfcModal(true);
   }
 
   useEffect(() => {
@@ -48,6 +53,12 @@ export default function Library() {
         <AddBookModal
           onClose={closeAddBook}
           onBookAdded={handleBookAdded}
+        />
+      )}
+      {showNfcModal && (
+        <NfcLinkModal
+          nfcLink={nfcUrl}
+          onClose={() => setShowNfcModal(false)}
         />
       )}
       <div className="book-grid">

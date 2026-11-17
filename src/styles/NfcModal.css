@@ -1,0 +1,103 @@
+/* Modal content */
+.modal {
+  width: min(400px, calc(100vw - 32px));
+  padding: 24px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.14);
+  box-sizing: border-box;
+}
+
+/* Header */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.nfc-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nfc-modal-title svg {
+  color: #3b5ccc;
+}
+
+.nfc-modal-title h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #242424;
+}
+
+.nfc-modal-description {
+  margin: 0 0 22px;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Link display */
+.nfc-link-box {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  background: #f8f9fc;
+  border: 1px solid #e7e9ef;
+  padding: 14px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+.nfc-link-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #888;
+}
+
+.nfc-link-url {
+  font-size: 13px;
+  color: #333;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+
+/* Copy button */
+.nfc-copy-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  padding: 12px;
+  background: #3b5ccc;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.nfc-copy-button:hover {
+  background: #304db0;
+}
+
+.nfc-copy-button:active {
+  transform: scale(0.99);
+}
+
+/* Footer hint */
+.nfc-modal-hint {
+  margin: 14px 0 0;
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+}

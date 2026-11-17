@@ -29,15 +29,17 @@
 .detail-cover {
   width: 220px;
   max-width: 35%;
+  aspect-ratio: 2 / 3;
   height: auto;
+  object-fit: cover;
+  object-position: center;
+  flex-shrink: 0;
+
   border: 1px solid var(--color-border);
   border-radius: 8px;
   box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.15),
     0 2px 6px rgba(0, 0, 0, 0.08);
-  box-sizing: border-box;
-  transition: box-shadow 0.25s ease, outline-color 0.25s ease,
-              transform 0.25s ease;
 }
 
 .detail-info {
@@ -158,6 +160,36 @@
   justify-content: center;
   align-items: center;
   min-height: 200px;
+}
+
+.nfc-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: #777;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nfc-button:hover {
+  background: #eef1ff;
+  color: #3b5ccc;
+}
+
+.book-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.book-title-row h1 {
+  margin: 0;
 }
 
 
