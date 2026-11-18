@@ -1,6 +1,8 @@
+import { Ellipsis,Pencil, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { apiFetch } from "../lib/api";
+import ConfirmModal from "./ConfirmModal";
 
 
 export default function BookNotes({ bookId }) {
@@ -9,6 +11,10 @@ export default function BookNotes({ bookId }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
+  const [openMenuId, setOpenMenuId] = useState(null);
+
+  const [noteToDelete, setNoteToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -67,6 +73,29 @@ export default function BookNotes({ bookId }) {
     }
   }
 
+  async function handleDeleteNote() {
+    if (noteToDelete === null) return;
+
+    setDeleting(true);
+    setError(null);
+
+    try {
+        await apiFetch(`/books/${bookId}/notes/${noteToDelete}`, {
+        method: "DELETE",
+        });
+
+        setNotes((prev) =>
+        prev.filter((note) => note.id !== noteToDelete)
+        );
+
+        setNoteToDelete(null);
+    } catch (err) {
+        setError(err.message);
+    } finally {
+        setDeleting(false);
+    }
+  }
+
   return (
     <section className="book-notes">
       <div className="notes-heading">
@@ -108,6 +137,37 @@ export default function BookNotes({ bookId }) {
                         year: "numeric",
                         })}
                     </span>
+
+                    <button
+                    type="button"
+                    className="note-menu-button"
+                    onClick={() =>
+                        setOpenMenuId(openMenuId === note.id ? null : note.id)
+                    }
+                    aria-label="Note options"
+                    >
+                    <Ellipsis size={18} />
+                    </button>
+                    {openMenuId === note.id && (
+                        <div className="note-dropdown">
+                            <button type="button">
+                            <Pencil size={14} />
+                            Edit
+                            </button>
+
+                            <button
+                            type="button"
+                            className="note-dropdown-delete"
+                            onClick={() => {
+                                setNoteToDelete(note.id);
+                                setOpenMenuId(null);
+                            }}
+                            >
+                            <Trash size={14} />
+                            Delete
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 <p>{note.content}</p>
@@ -119,6 +179,15 @@ export default function BookNotes({ bookId }) {
           </p>
         )}
       </div>
+      {noteToDelete !== null && (
+        <ConfirmModal
+            title="Delete note?"
+            message="This note will be permanently deleted. This cannot be undone."
+            onConfirm={handleDeleteNote}
+            onCancel={() => setNoteToDelete(null)}
+            loading={deleting}
+        />
+      )}
     </section>
   );
 }

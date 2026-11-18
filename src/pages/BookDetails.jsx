@@ -6,6 +6,7 @@ import { Link, useNavigate, useParams } from "react-router";
 
 import AddBookModal from "../components/AddBookModal";
 import BookNotes from "../components/BookNotes";
+import ConfirmModal from "../components/ConfirmModal";
 import NfcLinkModal from "../components/NfcLinkModal";
 import { apiFetch } from "../lib/api";
 
@@ -20,6 +21,10 @@ export default function BookDetails() {
   const [nfcUrl, setNfcUrl] = useState(null);
   const [showNfcModal, setShowNfcModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deletingBook, setDeletingBook] = useState(false);
+
   const readingStatus = ["reading", "finished"].includes(book?.status)
     ? book.status
     : "unread";
@@ -91,6 +96,9 @@ export default function BookDetails() {
   }
 
   async function handleDelete() {
+    if (deletingBook) return;
+
+    setDeletingBook(true);
     setError(null);
 
     try {
@@ -98,10 +106,12 @@ export default function BookDetails() {
         method: "DELETE",
       });
 
-      setShowEditModal(false);
       navigate("/library");
     } catch (err) {
       setError(err.message);
+      setShowDeleteConfirm(false);
+    } finally {
+      setDeletingBook(false);
     }
   }
 
@@ -123,7 +133,10 @@ export default function BookDetails() {
           book={book}
           onClose={() => setShowEditModal(false)}
           onBookUpdated={handleBookUpdated}
-          onBookDeleted={handleDelete}
+          onBookDeleted={() => {
+            setShowEditModal(false);
+            setShowDeleteConfirm(true);
+          }}
         />
       )}
       <Link to="/library" className="back-link">
@@ -219,6 +232,15 @@ export default function BookDetails() {
         </>
       ) : (
         <p>Book not found.</p>
+      )}
+      {showDeleteConfirm && (
+        <ConfirmModal
+          title="Delete book?"
+          message="This book will be permanently deleted. This cannot be undone."
+          onConfirm={handleDelete}
+          onCancel={() => setShowDeleteConfirm(false)}
+          loading={deletingBook}
+        />
       )}
     </div>
   );

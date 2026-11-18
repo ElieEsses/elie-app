@@ -1,0 +1,65 @@
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.confirm-modal {
+  width: 100%;
+  max-width: 380px;
+  box-sizing: border-box;
+  padding: 28px;
+  border-radius: 14px;
+  background: white;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+}
+
+.confirm-modal h2 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.confirm-modal p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #777;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.confirm-actions button {
+  padding: 10px 18px;
+  border-radius: 7px;
+  border: 1px solid #dedede;
+  background: white;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.confirm-actions .confirm-danger {
+  background: #c0392b;
+  border-color: #c0392b;
+  color: white;
+}
+
+.confirm-actions .confirm-danger:hover {
+  background: #a93226;
+}
+
+.confirm-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
