@@ -26,5 +26,9 @@ export async function apiFetch(endpoint, options = {}) {
     throw new Error(data.detail || `API error: ${response.statusText}`);
   }
 
+  if (response.status === 204) {
+    return null;
+  }
+
   return response.json();
 }

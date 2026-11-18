@@ -162,7 +162,7 @@
   min-height: 200px;
 }
 
-.nfc-button {
+.title-actions-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -177,9 +177,17 @@
   transition: background 0.2s, color 0.2s;
 }
 
-.nfc-button:hover {
+.title-actions-button:hover {
   background: #eef1ff;
   color: #3b5ccc;
+}
+
+.book-title-actions {
+  padding-left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
 }
 
 .book-title-row {
@@ -192,7 +200,17 @@
   margin: 0;
 }
 
+.delete-button {
+  margin-right: auto;
+  background: transparent;
+  color: #c0392b;
+  border: 1px solid #e8b9b5;
+}
 
+.delete-button:hover {
+  background: #fff1f0;
+  border-color: #c0392b;
+}
 
 @media (max-width: 600px) {
   .book-detail-content {

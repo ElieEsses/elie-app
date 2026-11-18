@@ -1,13 +1,16 @@
 import "../styles/Details.css";
 
-import { ArrowLeft, ChevronDown, Link as LinkIcon} from "lucide-react";
+import { ArrowLeft, ChevronDown, Link as LinkIcon, Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 
+import AddBookModal from "../components/AddBookModal";
 import NfcLinkModal from "../components/NfcLinkModal";
 import { apiFetch } from "../lib/api";
 
 export default function BookDetails() {
+  const navigate = useNavigate();
+
   const { bookId } = useParams();
   const [book, setBook] = useState(null);
   const [error, setError] = useState(null);
@@ -15,6 +18,7 @@ export default function BookDetails() {
   const [pagesInput, setPagesInput] = useState("");
   const [nfcUrl, setNfcUrl] = useState(null);
   const [showNfcModal, setShowNfcModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const readingStatus = ["reading", "finished"].includes(book?.status)
     ? book.status
     : "unread";
@@ -53,7 +57,7 @@ export default function BookDetails() {
 
   async function handleStatusChange(status) {
     try {
-      const updatedBook = await apiFetch(`/books/${bookId}`, {
+      const updatedBook = await apiFetch(`/books/${bookId}/progress`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -70,7 +74,7 @@ export default function BookDetails() {
 
   async function handleReadProgressChange(pages_read) {
     try {
-      const updatedBook = await apiFetch(`/books/${bookId}`, {
+      const updatedBook = await apiFetch(`/books/${bookId}/progress`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -84,6 +88,26 @@ export default function BookDetails() {
       setError(err.message);
     }
   }
+
+  async function handleDelete() {
+    setError(null);
+
+    try {
+      await apiFetch(`/books/${bookId}`, {
+        method: "DELETE",
+      });
+
+      setShowEditModal(false);
+      navigate("/library");
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  function handleBookUpdated(updatedBook) {
+    setBook(updatedBook);
+    setShowEditModal(false);
+  }
   
   return (
     <div className="book-details-page">
@@ -91,6 +115,14 @@ export default function BookDetails() {
         <NfcLinkModal
           nfcLink={nfcUrl}
           onClose={() => setShowNfcModal(false)}
+        />
+      )}
+      {showEditModal && (
+        <AddBookModal
+          book={book}
+          onClose={() => setShowEditModal(false)}
+          onBookUpdated={handleBookUpdated}
+          onBookDeleted={handleDelete}
         />
       )}
       <Link to="/library" className="back-link">
@@ -115,13 +147,22 @@ export default function BookDetails() {
             <div className="book-metadata">
               <div className="book-title-row">
                 <h1>{book.title}</h1>
-                <button
-                type="button"
-                className="nfc-button"
-                onClick={() => {setShowNfcModal(true)}}
-                >
-                <LinkIcon size={19} strokeWidth={1.8} />
-                </button>
+                <div className="book-title-actions">
+                  <button
+                  type="button"
+                  className="title-actions-button"
+                  onClick={() => {setShowNfcModal(true)}}
+                  >
+                    <LinkIcon size={19} strokeWidth={1.8} />
+                  </button>
+                  <button
+                  type="button"
+                  className="title-actions-button"
+                  onClick={() => {setShowEditModal(true)}}
+                  >
+                    <Pencil size={19} strokeWidth={1.8} />
+                  </button>
+                </div>
               </div>
               <h2>{book.authors.join(", ")}</h2>
               <p>{book.first_publish_year ?? "Unknown"} · {book.num_pages ?? "Unknown"} pages</p>
