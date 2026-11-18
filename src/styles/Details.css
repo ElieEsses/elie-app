@@ -196,10 +196,6 @@
   gap: 12px;
 }
 
-.book-title-row h1 {
-  margin: 0;
-}
-
 .delete-button {
   margin-right: auto;
   background: transparent;
@@ -210,6 +206,169 @@
 .delete-button:hover {
   background: #fff1f0;
   border-color: #c0392b;
+}
+
+.book-notes {
+  margin-top: 52px;
+  padding-top: 32px;
+  border-top: 1px solid var(--color-border);
+  width: 100%;
+}
+
+.notes-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.notes-heading h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #242424;
+}
+
+.notes-heading span {
+  font-size: 13px;
+  color: #999;
+}
+
+/* Note Editor */
+
+.note-editor {
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.note-editor:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(59, 92, 204, 0.07);
+}
+
+.note-editor textarea {
+  display: block;
+  width: 100%;
+  min-height: 65px;
+  height: auto;
+  padding: 18px;
+  box-sizing: border-box;
+  resize: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #333;
+}
+
+.note-editor textarea::placeholder {
+  color: #aaa;
+}
+
+.note-editor-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 12px 12px;
+}
+
+.note-editor-footer button {
+  padding: 9px 18px;
+  border: none;
+  border-radius: 7px;
+  background: var(--color-primary);
+  color: white;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.note-editor-footer button:hover:not(:disabled) {
+  background: #304bb0;
+}
+
+.note-editor-footer button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+
+.notes-list {
+  margin-top: 30px;
+}
+
+/* Existing notes */
+
+.notes-list {
+  margin-top: 36px;
+}
+
+.book-note {
+  padding: 22px 0;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.book-note:first-child {
+  padding-top: 0;
+}
+
+.book-note:last-child {
+  border-bottom: none;
+}
+
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.note-date {
+  font-size: 12px;
+  font-weight: 500;
+  color: #999;
+}
+
+.book-note p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #444;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.notes-empty {
+  font-size: 14px;
+  color: #999;
+  padding: 12px 0;
+}
+
+.notes-error {
+  font-size: 13px;
+  color: #c0392b;
+  margin-top: 12px;
+}
+
+@media (max-width: 600px) {
+  .book-notes {
+    margin-top: 36px;
+    padding-top: 26px;
+  }
+
+  .notes-heading h2 {
+    font-size: 20px;
+  }
+
+  .note-editor textarea {
+    font-size: 16px;
+  }
 }
 
 @media (max-width: 600px) {

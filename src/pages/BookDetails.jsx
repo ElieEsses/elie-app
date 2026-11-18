@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 
 import AddBookModal from "../components/AddBookModal";
+import BookNotes from "../components/BookNotes";
 import NfcLinkModal from "../components/NfcLinkModal";
 import { apiFetch } from "../lib/api";
 
@@ -135,83 +136,87 @@ export default function BookDetails() {
       ) : error ? (
         <p className="error">{error}</p>
       ) : book ? (
-        <div className="book-detail-content">
-          <img
-            className="detail-cover"
-            src={book.cover_url}
-            alt={`Cover of ${book.title}`}
-          />
+        <>
+          <div className="book-detail-content">
+            <img
+              className="detail-cover"
+              src={book.cover_url}
+              alt={`Cover of ${book.title}`}
+            />
 
-          <div className="detail-info">
-
-            <div className="book-metadata">
-              <div className="book-title-row">
-                <h1>{book.title}</h1>
-                <div className="book-title-actions">
-                  <button
-                  type="button"
-                  className="title-actions-button"
-                  onClick={() => {setShowNfcModal(true)}}
-                  >
-                    <LinkIcon size={19} strokeWidth={1.8} />
-                  </button>
-                  <button
-                  type="button"
-                  className="title-actions-button"
-                  onClick={() => {setShowEditModal(true)}}
-                  >
-                    <Pencil size={19} strokeWidth={1.8} />
-                  </button>
+            <div className="detail-info">
+              <div className="book-metadata">
+                <div className="book-title-row">
+                  <h1>{book.title}</h1>
+                  <div className="book-title-actions">
+                    <button
+                    type="button"
+                    className="title-actions-button"
+                    onClick={() => {setShowNfcModal(true)}}
+                    >
+                      <LinkIcon size={19} strokeWidth={1.8} />
+                    </button>
+                    <button
+                    type="button"
+                    className="title-actions-button"
+                    onClick={() => {setShowEditModal(true)}}
+                    >
+                      <Pencil size={19} strokeWidth={1.8} />
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <h2>{book.authors.join(", ")}</h2>
-              <p>{book.first_publish_year ?? "Unknown"} · {book.num_pages ?? "Unknown"} pages</p>
-            </div>
-
-            <div className="reading-section">
-              <label htmlFor="reading-status">Reading status</label>
-              <div className="status-select">
-                <select
-                  id="reading-status"
-                  value={readingStatus}
-                  onChange={(e) => handleStatusChange(e.target.value)}
-                >
-                  <option value="unread">Unread</option>
-                  <option value="reading">Reading</option>
-                  <option value="finished">Finished</option>
-                </select>
-                <ChevronDown size={16} />
+                <h2>{book.authors.join(", ")}</h2>
+                <p>{book.first_publish_year ?? "Unknown"} · {book.num_pages ?? "Unknown"} pages</p>
               </div>
 
-              {(readingStatus == "finished" || readingStatus == "reading" )&& (
-                <div className={`reading-progress ${readingStatus}`}>
-                  <div className="progress-header">
-                    <span>Reading progress</span>
-                    <span className="progress-count">
-                    <input
-                      className="pages-read-input"
-                      type="number"
-                      min="0"
-                      max={book.num_pages ?? 0}
-                      value={pagesInput}
-                      onChange={(e) => setPagesInput(e.target.value)}
-                      onBlur={() => handleReadProgressChange(Number(pagesInput))}
-                    />
-                    / {book.num_pages}
-                    </span>
+              <div className="reading-section">
+                  <label htmlFor="reading-status">Reading status</label>
+                  <div className="status-select">
+                    <select
+                      id="reading-status"
+                      value={readingStatus}
+                      onChange={(e) => handleStatusChange(e.target.value)}
+                    >
+                      <option value="unread">Unread</option>
+                      <option value="reading">Reading</option>
+                      <option value="finished">Finished</option>
+                    </select>
+                    <ChevronDown size={16} />
                   </div>
 
-                  {book.num_pages > 0 && (
-                    <progress
-                      value={Math.min(book.pages_read, book.num_pages)}
-                      max={book.num_pages}
-                    />
+                  {(readingStatus == "finished" || readingStatus == "reading" )&& (
+                    <div className={`reading-progress ${readingStatus}`}>
+                      <div className="progress-header">
+                        <span>Reading progress</span>
+                        <span className="progress-count">
+                        <input
+                          className="pages-read-input"
+                          type="number"
+                          min="0"
+                          max={book.num_pages ?? 0}
+                          value={pagesInput}
+                          onChange={(e) => setPagesInput(e.target.value)}
+                          onBlur={() => handleReadProgressChange(Number(pagesInput))}
+                        />
+                        / {book.num_pages}
+                        </span>
+                      </div>
+
+                      {book.num_pages > 0 && (
+                        <progress
+                          value={Math.min(book.pages_read, book.num_pages)}
+                          max={book.num_pages}
+                        />
+                      )}
+                    </div>
                   )}
-                </div>
-              )}
+              </div>
             </div>
           </div>
-        </div>
+          {readingStatus != "unread" && (
+            <BookNotes bookId={book.id} />
+          )}
+        </>
       ) : (
         <p>Book not found.</p>
       )}
