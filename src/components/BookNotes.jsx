@@ -13,8 +13,11 @@ export default function BookNotes({ bookId }) {
   const [error, setError] = useState(null);
   const [openMenuId, setOpenMenuId] = useState(null);
 
-  const [noteToDelete, setNoteToDelete] = useState(null);
+  const [noteIdToDelete, setNoteIdToDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
+
+  const [noteIdToEdit, setNoteIdToEdit] = useState(null);
+  const [editContent, setEditContent] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -73,22 +76,52 @@ export default function BookNotes({ bookId }) {
     }
   }
 
+  async function handleUpdateNote() {
+    if (!editContent.trim() || saving) return;
+
+    setSaving(true);
+    setError(null);
+
+    console.log(editContent, noteIdToEdit)
+
+    try {
+      const updatedNote = await apiFetch(`/books/${bookId}/notes/${noteIdToEdit}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content: editContent.trim() }),
+      });
+
+      setNotes((prev) =>
+        prev.map((note) =>
+          note.id === noteIdToEdit ? updatedNote : note
+        )
+      );
+      setNoteIdToEdit(null);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
   async function handleDeleteNote() {
-    if (noteToDelete === null) return;
+    if (noteIdToDelete === null) return;
 
     setDeleting(true);
     setError(null);
 
     try {
-        await apiFetch(`/books/${bookId}/notes/${noteToDelete}`, {
+        await apiFetch(`/books/${bookId}/notes/${noteIdToDelete}`, {
         method: "DELETE",
         });
 
         setNotes((prev) =>
-          prev.filter((note) => note.id !== noteToDelete)
+          prev.filter((note) => note.id !== noteIdToDelete)
         );
 
-        setNoteToDelete(null);
+        setNoteIdToDelete(null);
     } catch (err) {
         setError(err.message);
     } finally {
@@ -150,7 +183,14 @@ export default function BookNotes({ bookId }) {
                     </button>
                     {openMenuId === note.id && (
                         <div className="note-dropdown">
-                            <button type="button">
+                            <button 
+                            type="button"
+                            onClick={() => {
+                              setNoteIdToEdit(note.id);
+                              setEditContent(note.content);
+                              setOpenMenuId(null)
+                            }}
+                            >
                             <Pencil size={14} />
                             Edit
                             </button>
@@ -159,8 +199,8 @@ export default function BookNotes({ bookId }) {
                             type="button"
                             className="note-dropdown-delete"
                             onClick={() => {
-                                setNoteToDelete(note.id);
-                                setOpenMenuId(null);
+                              setNoteIdToDelete(note.id);
+                              setOpenMenuId(null);
                             }}
                             >
                             <Trash size={14} />
@@ -170,7 +210,36 @@ export default function BookNotes({ bookId }) {
                     )}
                 </div>
 
-                <p>{note.content}</p>
+                {noteIdToEdit === note.id ? (
+                  <div className="note-editor">
+                    <textarea
+                      value={editContent}
+                      onChange={(e) => setEditContent(e.target.value)}
+                      rows={3}
+                      autoFocus
+                    />
+
+                    <div className="note-editor-footer">
+                      <button
+                        type="button"
+                        className="edit-cancel-button"
+                        onClick={() => setNoteIdToEdit(null)}
+                      >
+                        Cancel
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={handleUpdateNote}
+                        disabled={!editContent.trim() || saving}
+                      >
+                        {saving ? "Saving..." : "Save"}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <p>{note.content}</p>
+                )}
             </article>
             ))
         ) : (
@@ -179,12 +248,12 @@ export default function BookNotes({ bookId }) {
           </p>
         )}
       </div>
-      {noteToDelete !== null && (
+      {noteIdToDelete !== null && (
         <ConfirmModal
             title="Delete note?"
             message="This note will be permanently deleted. This cannot be undone."
             onConfirm={handleDeleteNote}
-            onCancel={() => setNoteToDelete(null)}
+            onCancel={() => setNoteIdToDelete(null)}
             loading={deleting}
         />
       )}
