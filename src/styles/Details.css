@@ -272,7 +272,7 @@
 
 .note-editor-footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   padding: 0 12px 12px;
 }
 
@@ -298,6 +298,15 @@
   cursor: not-allowed;
 }
 
+.note-editor-footer .edit-cancel-button {
+  background: #f2f2f0;
+  color: #555;
+  border: 1px solid #e5e5e5;
+}
+
+.note-editor-footer .edit-cancel-button:hover:not(:disabled) {
+  background: #e7e7e4;
+}
 
 .notes-list {
   margin-top: 30px;
