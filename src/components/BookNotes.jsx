@@ -64,7 +64,7 @@ export default function BookNotes({ bookId }) {
       });
 
       const updatedNotes = await apiFetch(`/books/${bookId}/notes`);
-      setNotes(updatedNotes);
+      setNotes(updatedNotes.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
       setContent("");
     } catch (err) {
       setError(err.message);
@@ -85,7 +85,7 @@ export default function BookNotes({ bookId }) {
         });
 
         setNotes((prev) =>
-        prev.filter((note) => note.id !== noteToDelete)
+          prev.filter((note) => note.id !== noteToDelete)
         );
 
         setNoteToDelete(null);
