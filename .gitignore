@@ -33,3 +33,6 @@ dist-ssr
 
 /dev/
 
+.storybook
+*storybook.log
+storybook-static

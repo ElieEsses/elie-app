@@ -6,6 +6,7 @@ import { supabase } from "./lib/supabase";
 import BookDetails from "./pages/BookDetails";
 import Library from "./pages/Library";
 import Login from "./pages/Login";
+import Dev from "./pages/Dev";
 
 
 export default function App() {
@@ -70,6 +71,7 @@ export default function App() {
           : <Navigate to="/library" replace />
         } 
       />
+      <Route path="/dev" element={<Dev />} />
     </Routes>
   )
 }

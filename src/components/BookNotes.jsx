@@ -49,6 +49,12 @@ export default function BookNotes({ bookId }) {
     };
   }, [bookId]);
 
+  function autoResize(e) {
+    const textarea = e.target;
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  }
+
   async function handleAddNote(e) {
     e.preventDefault();
 
@@ -140,7 +146,10 @@ export default function BookNotes({ bookId }) {
         <textarea
           placeholder="Write a thought about this book..."
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={(e) => {
+            setContent(e.target.value);
+            autoResize(e);
+          }}
           rows={2}
         />
 
