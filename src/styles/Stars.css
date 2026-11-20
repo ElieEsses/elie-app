@@ -1,0 +1,22 @@
+.partial-star {
+  position: relative;
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+}
+
+.star-empty {
+  color: #d1d5db;
+}
+
+.star-fill {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  color: #f59e0b;
+}
+
+.star-fill svg {
+  fill: #f59e0b;
+  min-width: 24px;
+}

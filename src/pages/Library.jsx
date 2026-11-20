@@ -62,8 +62,7 @@ export default function Library() {
         />
       )}
       <div className="book-grid">
-        {[...books]
-          .sort((a, b) => a.title.localeCompare(b.title))
+        {books
           .map((book) => (
             <BookCard key={book.id} book={book} />
           ))}
