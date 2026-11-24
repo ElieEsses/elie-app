@@ -6,8 +6,6 @@ My central React frontend for personal projects, with shared authentication, com
 
 - **Digital Library** — Book management, reading progress, ratings, notes, and NFC integration.
 
-Built with React.
-
 ## Prerequisites
 
 - Node.js and npm
