@@ -27,7 +27,7 @@ export default function Login() {
   return (
     <div className="login-page">
       <div className="login-card">
-        <h1>Elie's Library</h1>
+        <h1>Elie's Home</h1>
         <form onSubmit={handleLogin}>
           <input
             type="email"
