@@ -438,6 +438,38 @@
   background: #fff1f0;
 }
 
+.reading-section-row {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  gap: 50px;
+}
+
+.reading-status-group,
+.review-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reading-section-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.reading-status-group,
+.reading-rating-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reading-label {
+  font-size: 13px;
+  color: #777;
+}
+
 @media (max-width: 600px) {
   .book-notes {
     margin-top: 36px;

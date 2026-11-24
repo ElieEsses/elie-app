@@ -3,10 +3,29 @@
   display: inline-flex;
   width: 24px;
   height: 24px;
+  cursor: pointer;
+
+  transition: transform 0.15s ease;
+}
+
+.stars-container {
+  display: inline-flex;
+  gap: 1px;
+}
+
+.partial-star:hover {
+  transform: scale(1.1);
 }
 
 .star-empty {
   color: #d1d5db;
+  fill: #e5e7eb;
+}
+
+.star-fill svg {
+  fill: #f59e0b;
+  width: 24px;
+  height: 24px;
 }
 
 .star-fill {
