@@ -1,4 +1,3 @@
-
 .book-details-page {
   max-width: 850px;
   margin: 0 auto;
@@ -174,7 +173,9 @@
   background: none;
   color: #777;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .title-actions-button:hover {
@@ -241,7 +242,9 @@
   border-radius: 10px;
   overflow: hidden;
   background: #fff;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .note-editor:focus-within {
@@ -377,7 +380,9 @@
   background: transparent;
   color: #999;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .note-menu-button:hover {
@@ -525,4 +530,3 @@
     -webkit-text-fill-color: #333;
   }
 }
-

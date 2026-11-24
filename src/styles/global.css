@@ -1,10 +1,10 @@
 :root {
-  --color-bg: #FFFFFF;
+  --color-bg: #ffffff;
   --color-text: #242424;
-  --color-primary: #3B5CCC;
+  --color-primary: #3b5ccc;
   --color-primary-dark: #304db0;
-  --color-border: #E5E5E5;
-  --color-error: #DC3545;
+  --color-border: #e5e5e5;
+  --color-error: #dc3545;
 }
 
 .button {

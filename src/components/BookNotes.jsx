@@ -1,9 +1,8 @@
-import { Ellipsis,Pencil, Trash } from "lucide-react";
+import { Ellipsis, Pencil, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { apiFetch } from "../lib/api";
 import ConfirmModal from "./ConfirmModal";
-
 
 export default function BookNotes({ bookId }) {
   const [notes, setNotes] = useState([]);
@@ -32,8 +31,10 @@ export default function BookNotes({ bookId }) {
 
         if (!cancelled) {
           setNotes(
-            data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        );
+            data.sort(
+              (a, b) => new Date(b.created_at) - new Date(a.created_at),
+            ),
+          );
         }
       } catch (err) {
         if (!cancelled) setError(err.message);
@@ -73,7 +74,11 @@ export default function BookNotes({ bookId }) {
       });
 
       const updatedNotes = await apiFetch(`/books/${bookId}/notes`);
-      setNotes(updatedNotes.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
+      setNotes(
+        updatedNotes.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at),
+        ),
+      );
       setContent("");
     } catch (err) {
       setError(err.message);
@@ -88,21 +93,22 @@ export default function BookNotes({ bookId }) {
     setSaving(true);
     setError(null);
 
-    console.log(editContent, noteIdToEdit)
+    console.log(editContent, noteIdToEdit);
 
     try {
-      const updatedNote = await apiFetch(`/books/${bookId}/notes/${noteIdToEdit}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
+      const updatedNote = await apiFetch(
+        `/books/${bookId}/notes/${noteIdToEdit}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ content: editContent.trim() }),
         },
-        body: JSON.stringify({ content: editContent.trim() }),
-      });
+      );
 
       setNotes((prev) =>
-        prev.map((note) =>
-          note.id === noteIdToEdit ? updatedNote : note
-        )
+        prev.map((note) => (note.id === noteIdToEdit ? updatedNote : note)),
       );
       setNoteIdToEdit(null);
     } catch (err) {
@@ -119,19 +125,17 @@ export default function BookNotes({ bookId }) {
     setError(null);
 
     try {
-        await apiFetch(`/books/${bookId}/notes/${noteIdToDelete}`, {
+      await apiFetch(`/books/${bookId}/notes/${noteIdToDelete}`, {
         method: "DELETE",
-        });
+      });
 
-        setNotes((prev) =>
-          prev.filter((note) => note.id !== noteIdToDelete)
-        );
+      setNotes((prev) => prev.filter((note) => note.id !== noteIdToDelete));
 
-        setNoteIdToDelete(null);
+      setNoteIdToDelete(null);
     } catch (err) {
-        setError(err.message);
+      setError(err.message);
     } finally {
-        setDeleting(false);
+      setDeleting(false);
     }
   }
 
@@ -154,10 +158,7 @@ export default function BookNotes({ bookId }) {
         />
 
         <div className="note-editor-footer">
-          <button
-            type="submit"
-            disabled={!content.trim() || saving}
-          >
+          <button type="submit" disabled={!content.trim() || saving}>
             {saving ? "Saving..." : "Add Note"}
           </button>
         </div>
@@ -169,88 +170,88 @@ export default function BookNotes({ bookId }) {
         {loading ? (
           <p className="notes-empty">Loading notes...</p>
         ) : notes.length > 0 ? (
-            notes.map((note) => (
+          notes.map((note) => (
             <article key={note.id} className="book-note">
-                <div className="note-header">
-                    <span className="note-date">
-                        {new Date(note.created_at).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                        })}
-                    </span>
+              <div className="note-header">
+                <span className="note-date">
+                  {new Date(note.created_at).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </span>
+
+                <button
+                  type="button"
+                  className="note-menu-button"
+                  onClick={() =>
+                    setOpenMenuId(openMenuId === note.id ? null : note.id)
+                  }
+                  aria-label="Note options"
+                >
+                  <Ellipsis size={18} />
+                </button>
+                {openMenuId === note.id && (
+                  <div className="note-dropdown">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNoteIdToEdit(note.id);
+                        setEditContent(note.content);
+                        setOpenMenuId(null);
+                      }}
+                    >
+                      <Pencil size={14} />
+                      Edit
+                    </button>
 
                     <button
-                    type="button"
-                    className="note-menu-button"
-                    onClick={() =>
-                        setOpenMenuId(openMenuId === note.id ? null : note.id)
-                    }
-                    aria-label="Note options"
+                      type="button"
+                      className="note-dropdown-delete"
+                      onClick={() => {
+                        setNoteIdToDelete(note.id);
+                        setOpenMenuId(null);
+                      }}
                     >
-                    <Ellipsis size={18} />
+                      <Trash size={14} />
+                      Delete
                     </button>
-                    {openMenuId === note.id && (
-                        <div className="note-dropdown">
-                            <button 
-                            type="button"
-                            onClick={() => {
-                              setNoteIdToEdit(note.id);
-                              setEditContent(note.content);
-                              setOpenMenuId(null)
-                            }}
-                            >
-                            <Pencil size={14} />
-                            Edit
-                            </button>
-
-                            <button
-                            type="button"
-                            className="note-dropdown-delete"
-                            onClick={() => {
-                              setNoteIdToDelete(note.id);
-                              setOpenMenuId(null);
-                            }}
-                            >
-                            <Trash size={14} />
-                            Delete
-                            </button>
-                        </div>
-                    )}
-                </div>
-
-                {noteIdToEdit === note.id ? (
-                  <div className="note-editor">
-                    <textarea
-                      value={editContent}
-                      onChange={(e) => setEditContent(e.target.value)}
-                      rows={3}
-                      autoFocus
-                    />
-
-                    <div className="note-editor-footer">
-                      <button
-                        type="button"
-                        className="edit-cancel-button"
-                        onClick={() => setNoteIdToEdit(null)}
-                      >
-                        Cancel
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={handleUpdateNote}
-                        disabled={!editContent.trim() || saving}
-                      >
-                        {saving ? "Saving..." : "Save"}
-                      </button>
-                    </div>
                   </div>
-                ) : (
-                  <p>{note.content}</p>
                 )}
+              </div>
+
+              {noteIdToEdit === note.id ? (
+                <div className="note-editor">
+                  <textarea
+                    value={editContent}
+                    onChange={(e) => setEditContent(e.target.value)}
+                    rows={3}
+                    autoFocus
+                  />
+
+                  <div className="note-editor-footer">
+                    <button
+                      type="button"
+                      className="edit-cancel-button"
+                      onClick={() => setNoteIdToEdit(null)}
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleUpdateNote}
+                      disabled={!editContent.trim() || saving}
+                    >
+                      {saving ? "Saving..." : "Save"}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <p>{note.content}</p>
+              )}
             </article>
-            ))
+          ))
         ) : (
           <p className="notes-empty">
             No notes yet. Add your first thought above.
@@ -259,11 +260,11 @@ export default function BookNotes({ bookId }) {
       </div>
       {noteIdToDelete !== null && (
         <ConfirmModal
-            title="Delete note?"
-            message="This note will be permanently deleted. This cannot be undone."
-            onConfirm={handleDeleteNote}
-            onCancel={() => setNoteIdToDelete(null)}
-            loading={deleting}
+          title="Delete note?"
+          message="This note will be permanently deleted. This cannot be undone."
+          onConfirm={handleDeleteNote}
+          onCancel={() => setNoteIdToDelete(null)}
+          loading={deleting}
         />
       )}
     </section>

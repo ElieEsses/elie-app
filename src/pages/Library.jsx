@@ -19,9 +19,7 @@ export default function Library() {
 
   function handleBookAdded(book) {
     setBooks((prev) =>
-      prev.some((existing) => existing.id === book.id)
-        ? prev
-        : [...prev, book]
+      prev.some((existing) => existing.id === book.id) ? prev : [...prev, book],
     );
     setShowAddBook(false);
     setNfcUrl(book.nfc_url || null);
@@ -44,28 +42,25 @@ export default function Library() {
           <h1>My Library</h1>
           <p>{books.length} books on your shelf</p>
         </div>
-        <button className="button" type="button" onClick={() => setShowAddBook(true)}>
+        <button
+          className="button"
+          type="button"
+          onClick={() => setShowAddBook(true)}
+        >
           <span aria-hidden="true">+</span>
           Add book
         </button>
       </header>
       {showAddBook && (
-        <AddBookModal
-          onClose={closeAddBook}
-          onBookAdded={handleBookAdded}
-        />
+        <AddBookModal onClose={closeAddBook} onBookAdded={handleBookAdded} />
       )}
       {showNfcModal && (
-        <NfcLinkModal
-          nfcLink={nfcUrl}
-          onClose={() => setShowNfcModal(false)}
-        />
+        <NfcLinkModal nfcLink={nfcUrl} onClose={() => setShowNfcModal(false)} />
       )}
       <div className="book-grid">
-        {books
-          .map((book) => (
-            <BookCard key={book.id} book={book} />
-          ))}
+        {books.map((book) => (
+          <BookCard key={book.id} book={book} />
+        ))}
       </div>
     </div>
   );

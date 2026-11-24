@@ -20,11 +20,7 @@ export default function ConfirmModal({
         <p id="confirm-message">{message}</p>
 
         <div className="confirm-actions">
-          <button
-            type="button"
-            onClick={onCancel}
-            disabled={loading}
-          >
+          <button type="button" onClick={onCancel} disabled={loading}>
             Cancel
           </button>
 
