@@ -4,7 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import { apiFetch } from "../lib/api";
 import BarcodeScanner from "./BarcodeScanner";
 
-export default function AddBookModal({ book = null, onClose, onBookAdded, onBookUpdated, onBookDeleted }) {
+export default function AddBookModal({
+  book = null,
+  onClose,
+  onBookAdded,
+  onBookUpdated,
+  onBookDeleted,
+}) {
   const isEditMode = book !== null;
 
   const [isbn, setIsbn] = useState("");
@@ -74,16 +80,15 @@ export default function AddBookModal({ book = null, onClose, onBookAdded, onBook
       [field]: value,
     }));
   }
-    
+
   const handleBarcodeScan = useCallback(
     (scannedIsbn) => {
       setIsbn(scannedIsbn);
       handleBookLookup(scannedIsbn);
       setShowScanner(false);
     },
-    [handleBookLookup]
+    [handleBookLookup],
   );
-
 
   useEffect(() => {
     function handleEscape(e) {
@@ -100,137 +105,141 @@ export default function AddBookModal({ book = null, onClose, onBookAdded, onBook
     <div className="modal-overlay">
       <div className="modal">
         <div className="modal-header">
-            <h2>{isEditMode ? "Edit book" : "Add a book"}</h2>
-            <button
+          <h2>{isEditMode ? "Edit book" : "Add a book"}</h2>
+          <button
             type="button"
             className="modal-close"
             onClick={() => {
-                onClose();
+              onClose();
             }}
             aria-label="Close"
-            >
+          >
             ×
-            </button>
+          </button>
         </div>
         {!isEditMode && (
           <>
             <div className="search">
-                <input
+              <input
                 placeholder="Enter ISBN"
                 value={isbn}
                 onChange={(e) => setIsbn(e.target.value)}
-                />
-                <button className="button" onClick={() => handleBookLookup(isbn)}>Search</button>
-                <button
+              />
+              <button className="button" onClick={() => handleBookLookup(isbn)}>
+                Search
+              </button>
+              <button
                 type="button"
                 className="scan-button"
                 onClick={() => setShowScanner((prev) => !prev)}
                 aria-label={showScanner ? "Close scanner" : "Scan barcode"}
                 title={showScanner ? "Close scanner" : "Scan barcode"}
-                >
+              >
                 <ScanBarcode size={19} strokeWidth={1.8} />
-                </button>
+              </button>
             </div>
-            {showScanner && (
-              <BarcodeScanner onScan={handleBarcodeScan} />
-            )}
+            {showScanner && <BarcodeScanner onScan={handleBarcodeScan} />}
             {error && <p className="error">{error}</p>}
           </>
         )}
         {foundBook && (
-            <>
+          <>
             <div className="book-details">
-                <div className="cover-column">
+              <div className="cover-column">
                 <div className="cover-editor">
-                    <img
+                  <img
                     className="preview-cover"
                     src={foundBook.cover_url}
                     alt={foundBook.title}
-                    />
+                  />
 
-                    <button
+                  <button
                     type="button"
                     className="cover-edit-button"
                     onClick={() => setEditingCover((prev) => !prev)}
                     aria-label="Edit cover URL"
-                    >
+                  >
                     ✎
-                    </button>
+                  </button>
                 </div>
                 {editingCover && (
-                    <input
+                  <input
                     type="url"
                     className="cover-url-input"
                     placeholder="Paste cover image URL"
                     value={foundBook.cover_url ?? ""}
                     onChange={(e) => updateBook("cover_url", e.target.value)}
-                    />
+                  />
                 )}
-                </div>
-                <div className="book-info">
+              </div>
+              <div className="book-info">
                 <div className="book-info-row">
-                    <span>Title: </span>
-                    <input
+                  <span>Title: </span>
+                  <input
                     type="text"
                     value={foundBook.title}
                     onChange={(e) => updateBook("title", e.target.value)}
-                    />
+                  />
                 </div>
 
                 <div className="book-info-row">
-                    <span>Authors: </span>
-                    <input
+                  <span>Authors: </span>
+                  <input
                     type="text"
                     value={foundBook.authors.join(", ")}
                     onChange={(e) =>
-                        updateBook("authors", e.target.value.split(","))
+                      updateBook("authors", e.target.value.split(","))
                     }
-                    />
+                  />
                 </div>
 
                 <div className="book-info-row">
-                    <span>First Published: </span>
-                    <input
+                  <span>First Published: </span>
+                  <input
                     type="number"
                     placeholder="First published"
                     value={foundBook.first_publish_year ?? ""}
                     onChange={(e) =>
-                        updateBook(
+                      updateBook(
                         "first_publish_year",
-                        e.target.value === "" ? null : Number(e.target.value)
-                        )
+                        e.target.value === "" ? null : Number(e.target.value),
+                      )
                     }
-                    />
+                  />
                 </div>
                 <div className="book-info-row">
-                    <span>Number of Pages: </span>
-                    <input
+                  <span>Number of Pages: </span>
+                  <input
                     type="number"
                     min="1"
                     placeholder="Pages"
                     value={foundBook.num_pages ?? ""}
                     onChange={(e) =>
-                        updateBook(
+                      updateBook(
                         "num_pages",
-                        e.target.value === "" ? null : Number(e.target.value)
-                        )
+                        e.target.value === "" ? null : Number(e.target.value),
+                      )
                     }
-                    />
+                  />
                 </div>
-                </div>
+              </div>
             </div>
             {addBookError && <p className="error">{addBookError}</p>}
             <div className="modal-actions">
-                {isEditMode && (
-                  <button className="button delete-button" type="button" onClick={onBookDeleted}>
+              {isEditMode && (
+                <button
+                  className="button delete-button"
+                  type="button"
+                  onClick={onBookDeleted}
+                >
                   Delete
-                  </button>
-                )}
-                <button className="button" type="button" onClick={handleSubmit}>
-                {isEditMode ? "Update" : "Add to library"}  
                 </button>
+              )}
+              <button className="button" type="button" onClick={handleSubmit}>
+                {isEditMode ? "Update" : "Add to library"}
+              </button>
             </div>
-            </>
+          </>
         )}
       </div>
     </div>

@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 
-
 export default function BookCard({ book }) {
   return (
     <Link to={`/library/${book.id}`} className="book-card">

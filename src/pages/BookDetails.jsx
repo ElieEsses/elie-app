@@ -29,7 +29,7 @@ export default function BookDetails() {
   const readingStatus = ["reading", "finished"].includes(book?.status)
     ? book.status
     : "unread";
-  
+
   useEffect(() => {
     let cancelled = false;
 
@@ -83,7 +83,7 @@ export default function BookDetails() {
     setBook(updatedBook);
     setShowEditModal(false);
   }
-  
+
   return (
     <div className="book-details-page">
       <Link to="/library" className="back-link">
@@ -114,7 +114,10 @@ export default function BookDetails() {
                   />
                 </div>
                 <h2>{book.authors.join(", ")}</h2>
-                <p>{book.first_publish_year ?? "Unknown"} · {book.num_pages ?? "Unknown"} pages</p>
+                <p>
+                  {book.first_publish_year ?? "Unknown"} ·{" "}
+                  {book.num_pages ?? "Unknown"} pages
+                </p>
               </div>
               <ReadingProgress
                 book={book}
@@ -123,9 +126,7 @@ export default function BookDetails() {
               />
             </div>
           </div>
-          {readingStatus != "unread" && (
-            <BookNotes bookId={book.id} />
-          )}
+          {readingStatus != "unread" && <BookNotes bookId={book.id} />}
         </>
       ) : (
         <p>Book not found.</p>
@@ -142,10 +143,7 @@ export default function BookDetails() {
       )}
 
       {showNfcModal && (
-        <NfcLinkModal
-          nfcLink={nfcUrl}
-          onClose={() => setShowNfcModal(false)}
-        />
+        <NfcLinkModal nfcLink={nfcUrl} onClose={() => setShowNfcModal(false)} />
       )}
 
       {showEditModal && (
@@ -159,7 +157,6 @@ export default function BookDetails() {
           }}
         />
       )}
-
     </div>
   );
 }

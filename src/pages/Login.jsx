@@ -23,14 +23,24 @@ export default function Login() {
       setError(null);
     }
   }
-    
+
   return (
     <div className="login-page">
       <div className="login-card">
         <h1>Elie's Library</h1>
         <form onSubmit={handleLogin}>
-          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <button type="submit">Log in</button>
           {error && <p className="error">{error}</p>}
         </form>
